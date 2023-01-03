@@ -1,0 +1,42 @@
+---
+title: 'PRACTICA 2: ¿Cómo realizar la limpieza y análisis de datos?'
+author: "Autores"
+date: "03/01/2023"
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 3
+lang: es
+tuthor: Laia Subirats Maté
+---
+
+# 1.Descripción del dataset
+
+# 2.Integración y selección 
+
+# 3. Limpieza de los datos
+
+## 3.1. ¿Los datos contienen ceros o elementos vacíos? 
+
+## 3.2. Identifica y gestiona los valores extremos
+
+# 4. Análisis de los datos
+
+## 4.1. Selección de los grupos de datos que se quieren analizar/compara
+
+## 4.2. Comprobación de la normalidad y homogeneidad de la varianza
+
+## 4.3. Aplicación de pruebas estadísticas para comparar los grupos de datos
+
+# 5. Representación de los resultados a partir de tablas y gráficas
+
+# 6. Resolución del problema
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars, echo=FALSE}
+summary(cars)
+```
+
