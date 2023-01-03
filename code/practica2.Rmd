@@ -1,6 +1,6 @@
 ---
 title: 'PRACTICA 2: ¿Cómo realizar la limpieza y análisis de datos?'
-author: "Autores"
+author: "Authors"
 date: "03/01/2023"
 output:
   pdf_document:
@@ -10,15 +10,58 @@ lang: es
 tuthor: Laia Subirats Maté
 ---
 
+\pagebreak
+
 # 1.Descripción del dataset
 
 # 2.Integración y selección 
 
 # 3. Limpieza de los datos
 
+```{r echo=FALSE}
+df <- read.csv('../data/heart.csv')
+```
+
+En este apartado se corregirán los registros del csv que sean erróneos.
+
 ## 3.1. ¿Los datos contienen ceros o elementos vacíos? 
 
+Podemos comprobar que no se encuentran elementos nulos en el csv con el siguiente código:
+
+```{r}
+sapply(df, function(x) sum(is.na(x)))
+```
+
+
+---TODO
+Discretizar edad
+----
+
+
 ## 3.2. Identifica y gestiona los valores extremos
+
+Los valores extremos (*outliers*) son aquellos que se encuentran fuera del rango [Lo,Ho], donde:
+
+  · Lo (Lower Outlier) = Q1 – (1.5 * IQR)
+  
+  · Ho (Higher Outlier) = Q3 + (1.5 * IQR)
+  
+y IQR = Q3 - Q1. También hay una fórmula que trata outliers los que sobrepasan la media +/- la desviación estándar, pero optaremos por fórmula descrita.
+
+
+Encontramos varios outliers en los datos. Visualizamos los outliers de la columna **chol**. Que según definido en el dataset es el colesterol en mg/dl capturado con un sensor BMI.
+
+```{r echo=FALSE}
+boxplot(df$chol, horizontal = TRUE, xlab ="Chol (mg/dL)", col=c("blue"))
+```
+
+---
+TODO
+
+Quiza plotear todas las columnas pero que se puedan leer. Problema es que no estan en la misma escala (0-1 y 80-200)
+
+---
+
 
 # 4. Análisis de los datos
 
