@@ -93,27 +93,44 @@ Discretizar edad
 
 ## 3.2. Identifica y gestiona los valores extremos
 
-Los valores extremos (*outliers*) son aquellos que se encuentran fuera del rango [Lo,Ho], donde:
+Los valores extremos (*outliers*) los identificaremos como aquellos que se encuentran fuera del rango [Lo,Ho] donde:
 
-  · Lo (Lower Outlier) = Q1 – (1.5 * IQR)
+  · Lo = Q1 – (1.5 * IQR) 
   
-  · Ho (Higher Outlier) = Q3 + (1.5 * IQR)
+  · Ho = Q3 + (1.5 * IQR)
   
-y IQR = Q3 - Q1. También hay una fórmula que trata outliers los que sobrepasan la media +/- la desviación estándar, pero optaremos por fórmula descrita.
+y IQR = Q3 - Q1. También hay una fórmula que trata outliers los que sobrepasan la media +/- la desviación estándar, pero optaremos por la fórmula descrita, ya que también es la que usa *R* por defecto en la función boxplot.
 
+A continuación, mostramos la cantidad de outliers por columna con la siguiente función:
 
-Encontramos varios outliers en los datos. Visualizamos los outliers de la columna **chol**. Que según definido en el dataset es el colesterol en mg/dl capturado con un sensor BMI.
-
-```{r echo=FALSE}
-boxplot(df$chol, horizontal = TRUE, xlab ="Chol (mg/dL)", col=c("blue"))
+```{r}
+outliers<-function(x){
+  outliers<-boxplot.stats(x)$out
+  return (length(outliers))
+}
 ```
 
----
-TODO
+```{r echo=FALSE}
+sapply(df, function(x) outliers(x))
+```
 
-Quiza plotear todas las columnas pero que se puedan leer. Problema es que no estan en la misma escala (0-1 y 80-200)
+Encontramos varios outliers en los datos. Las columnas *fbs*, *caa* y *thall* son columnas **númericas discretas** por lo que no los consideramos outliers, sino solo un dataset desequilibrado.
 
----
+Visualizamos para entender mejor las demás variables.
+
+```{r echo=FALSE}
+boxplot(df$trtbps,df$chol,df$thalachh, names =c("trtbps","chol","thalachh"), col=c("blue","red","green"))
+```
+
+La variable *oldpeak* la visualizamos en un histograma al estar en una escala diferente a las demás.
+
+```{r echo=FALSE}
+h<-hist(df$oldpeak,plot=FALSE)
+plot(h, xaxt = "n", xlab = "Oldpeak Histogram", ylab = "Counts", main = "", col = "pink")
+```
+
+
+Viendo las visualizaciones suponemos que no ha habido errores a la hora de capturar los datos. Si que es cierto que en la columna *chol* encontramos un valor muy alejado del valor medio, pero lo mantendremos dentro del analisis al igual que el resto de los outliers. Si creamos un modelo de predicción podemos asegurar de incluir los outliers tanto en el train como en el test set.
 
 
 # 4. Análisis de los datos
