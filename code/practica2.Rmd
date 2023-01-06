@@ -73,11 +73,17 @@ Para terminar con este apartado, vamos a explicar brevemente todos y cada uno de
 
 # 2.Integración y selección 
 
+
+\pagebreak
 # 3. Limpieza de los datos
 
-En este apartado se corregirán los registros del csv que sean erróneos.
-
 ## 3.1. ¿Los datos contienen ceros o elementos vacíos? 
+
+Ante elementos vacíos se pueden seguir principalmente dos estrategias: la **imputación** y la **eliminación**.
+
+Para la primera, se trata de rellenar los valores nulos basandose en los valores no vacíos. Esto se realizar típicamente mediante *knn*, interpolación o cogiendo la media de una columna.
+
+La segunda estrategía consiste en eliminar las filas con valores nulos. Esta se suele usar cuando se tiene un dataset grande y los valores nulos no suponen un gran porcentaje.
 
 Podemos comprobar que no se encuentran elementos nulos en el csv con el siguiente código:
 
@@ -85,10 +91,36 @@ Podemos comprobar que no se encuentran elementos nulos en el csv con el siguient
 sapply(df, function(x) sum(is.na(x)))
 ```
 
+Dado que no encontramos valores nulos no aplicamos ninguna de las estrategias. Pero vamos a discretizar la columna *age* para mejor procesamiento.
 
----TODO
-Discretizar edad
-----
+**Discretización**
+
+Para la variable edad, en lugar de tener el valor exacto crearemos grupos por decenas de edad.
+
+E.g:
+
+·30-39 -> 3
+
+·40-49 -> 4
+
+...
+
+```{r echo=FALSE}
+df$age[df$age >= 20 & df$age<30] = 2
+df$age[df$age >= 30 & df$age<40] = 3
+df$age[df$age >= 40 & df$age<50] = 4
+df$age[df$age >= 50 & df$age<60] = 5
+df$age[df$age >= 60 & df$age<70] = 6
+df$age[df$age >= 70 & df$age<80] = 7
+```
+
+Vemos el resultado
+
+
+```{r echo=FALSE}
+table(df$age)
+```
+
 
 
 ## 3.2. Identifica y gestiona los valores extremos
@@ -131,7 +163,7 @@ plot(h, xaxt = "n", xlab = "Oldpeak Histogram", ylab = "Counts", main = "", col 
 
 
 Viendo las visualizaciones suponemos que no ha habido errores a la hora de capturar los datos. Si que es cierto que en la columna *chol* encontramos un valor muy alejado del valor medio, pero lo mantendremos dentro del analisis al igual que el resto de los outliers. Si creamos un modelo de predicción podemos asegurar de incluir los outliers tanto en el train como en el test set.
-
+\pagebreak
 
 # 4. Análisis de los datos
 
