@@ -167,7 +167,37 @@ Viendo las visualizaciones suponemos que no ha habido errores a la hora de captu
 
 # 4. Análisis de los datos
 
-## 4.1. Selección de los grupos de datos que se quieren analizar/compara
+## 4.1. Selección de los grupos de datos que se quieren analizar/comparar
+
+Hay 3 grupos en especial que nos interesa estudiar en función del fallo cardíaco:
+
+· La variable **sex**. En función de hombres y mujeres.
+
+· La variable **age**. En función de la edad de los pacientes.
+
+· La variable **trtbps**. En función de la presión arterial de los pacientes. Información extraída de: [mayoclinic.org](https://www.mayoclinic.org/es-es/diseases-conditions/high-blood-pressure/diagnosis-treatment/drc-20373417#:~:text=Presi%C3%B3n%20arterial%20normal,de%20emergencia%20local.)
+
+
+```{r}
+# Agrupación por género
+df.male <- df[df$sex == 1,]
+df.female <- df[df$sex == 0,]
+
+# Agrupación por edad
+df.young_adult <- df[df$age<4,]
+df.adult <- df[df$age>=4&df$age<6,]
+df.old_adult <- df[df$age>=6,]
+
+# Agrupación por presión arterial
+df.normal_pressure <- df[df$trtbps<120,]
+df.high_pressure <- df[df$trtbps>=120&df$trtbps<130,]
+df.hipertension1 <- df[df$trtbps>=130&df$trtbps<140,]
+df.hipertension2 <- df[df$trtbps>=140&df$trtbps<180,]
+df.crisis_hipertension <- df[df$trtbps>=180,]
+```
+
+
+
 
 ## 4.2. Comprobación de la normalidad y homogeneidad de la varianza
 
