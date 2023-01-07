@@ -1,7 +1,7 @@
 ---
 title: 'PRÁCTICA 2: ¿Cómo realizar la limpieza y análisis de datos?'
 author: "Lukaz Martin Doehne y Pablo Vadillo Berganza"
-date: "04/01/2023"
+date: "07/01/2023"
 output:
   pdf_document:
     toc: true
@@ -73,17 +73,68 @@ Para terminar con este apartado, vamos a explicar brevemente todos y cada uno de
 
 # 2.Integración y selección 
 
+En este apartado analizaremos qué campos son realmente significativos a la hora de predecir la variable output.
 
-\pagebreak
+En primer lugar, calcularemos los coeficientes de correlación de Pearson, y nos fijaremos expresamente en la variable a predecir, output, con el resto de variables independientes.
+
+```{r}
+cor_pearson <- cor(df)
+
+# Mostramos los valores de output con el resto,
+
+cor_pearson[14,]
+```
+
+Las variables chol (colesterol sérico) y fbs (nivel de azúcar en sangre en ayunas) presentan un coeficiente por debajo del 0.1 (en valor absoluto), por lo que podemos concluir que la correlación con la variable a predecir es prácticamente inexistente, y podemos prescindir de estas variables de cara al análisis.
+
+
+Para acabar con este apartado, haremos un análisis de componentes principales, para detectar cuáles son las variables que realmente describen el conjunto de datos.
+
+Pero antes, descargaremos las librerías necesarias,
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+if (!require('FactoMineR')) install.packages('FactoMineR'); library('FactoMineR')
+if (!require('factoextra')) install.packages("factoextra"); library('factoextra')
+```
+
+A continuación, realizamos el test de PCA,
+
+```{r}
+PCA <- PCA(df, graph=FALSE)
+
+# Contribuciones de las variables a PC1,
+fviz_contrib(PCA, choice = "var", axes = 1, top = 14)
+# Contribuciones de las variables a PC2,
+fviz_contrib(PCA, choice = "var", axes = 2, top = 14)
+```
+
+En estos gráficos podemos ver el nivel de contribución de cada una de las variables a las 2 primeras dimensiones de las componentes principales. Seleccionamos las dos primeras dimensiones ya que las variables que estén correlacionadas con éstas serán las que sean capaces de explicar todo el dataset.
+
+
+Las variables output, oldpeak, thalachh, exng, slp y cp contribuyen más que la media de contribución esperada (línea roja) para la dimensión 1. Sin embargo, caa, age y thall también contribuyen de forma no despreciable. Las variables trtbps, sex, restecg, chol y fbs son las que menos contribuyen a la dimensión 1.
+
+
+Si vamos a la dimensión 2, tenemos que age, trtbps, sex, chol, fbs y cp contribuyen más que la media de contribución esperada.
+
+Viendo la perspectiva para las dos primeras dimensiones, vemos que la variable restecg (Resultado de electrocardiograma en reposo) es la que menos contribuye. Además, volviendo al coeficiente de correlación de Pearson, después de chol y fbs, también es la que menor coeficiente, en valor absoluto, presenta.
+
+
+En conclusión, prescindiremos de las variables chol y fbs por presentar una correlación prácticamente inexistente con la variable a predecir, output. Por otro lado, también prescindimos del campo restecg ya que es el que menos contribuye a la variabilidad del dataset, además de presentar una correlación débil con la variable a predecir.
+
+
+```{r}
+col <- c(1,2,3,4,8,9,10,11,12,13,14)
+
+df_def <- df[,col]
+```
+
+
+
 # 3. Limpieza de los datos
 
+En este apartado se corregirán los registros del csv que sean erróneos.
+
 ## 3.1. ¿Los datos contienen ceros o elementos vacíos? 
-
-Ante elementos vacíos se pueden seguir principalmente dos estrategias: la **imputación** y la **eliminación**.
-
-Para la primera, se trata de rellenar los valores nulos basandose en los valores no vacíos. Esto se realizar típicamente mediante *knn*, interpolación o cogiendo la media de una columna.
-
-La segunda estrategía consiste en eliminar las filas con valores nulos. Esta se suele usar cuando se tiene un dataset grande y los valores nulos no suponen un gran porcentaje.
 
 Podemos comprobar que no se encuentran elementos nulos en el csv con el siguiente código:
 
@@ -91,36 +142,10 @@ Podemos comprobar que no se encuentran elementos nulos en el csv con el siguient
 sapply(df, function(x) sum(is.na(x)))
 ```
 
-Dado que no encontramos valores nulos no aplicamos ninguna de las estrategias. Pero vamos a discretizar la columna *age* para mejor procesamiento.
 
-**Discretización**
-
-Para la variable edad, en lugar de tener el valor exacto crearemos grupos por decenas de edad.
-
-E.g:
-
-·30-39 -> 3
-
-·40-49 -> 4
-
-...
-
-```{r echo=FALSE}
-df$age[df$age >= 20 & df$age<30] = 2
-df$age[df$age >= 30 & df$age<40] = 3
-df$age[df$age >= 40 & df$age<50] = 4
-df$age[df$age >= 50 & df$age<60] = 5
-df$age[df$age >= 60 & df$age<70] = 6
-df$age[df$age >= 70 & df$age<80] = 7
-```
-
-Vemos el resultado
-
-
-```{r echo=FALSE}
-table(df$age)
-```
-
+---TODO
+Discretizar edad
+----
 
 
 ## 3.2. Identifica y gestiona los valores extremos
@@ -163,41 +188,11 @@ plot(h, xaxt = "n", xlab = "Oldpeak Histogram", ylab = "Counts", main = "", col 
 
 
 Viendo las visualizaciones suponemos que no ha habido errores a la hora de capturar los datos. Si que es cierto que en la columna *chol* encontramos un valor muy alejado del valor medio, pero lo mantendremos dentro del analisis al igual que el resto de los outliers. Si creamos un modelo de predicción podemos asegurar de incluir los outliers tanto en el train como en el test set.
-\pagebreak
+
 
 # 4. Análisis de los datos
 
-## 4.1. Selección de los grupos de datos que se quieren analizar/comparar
-
-Hay 3 grupos en especial que nos interesa estudiar en función del fallo cardíaco:
-
-· La variable **sex**. En función de hombres y mujeres.
-
-· La variable **age**. En función de la edad de los pacientes.
-
-· La variable **trtbps**. En función de la presión arterial de los pacientes. Información extraída de: [mayoclinic.org](https://www.mayoclinic.org/es-es/diseases-conditions/high-blood-pressure/diagnosis-treatment/drc-20373417#:~:text=Presi%C3%B3n%20arterial%20normal,de%20emergencia%20local.)
-
-
-```{r}
-# Agrupación por género
-df.male <- df[df$sex == 1,]
-df.female <- df[df$sex == 0,]
-
-# Agrupación por edad
-df.young_adult <- df[df$age<4,]
-df.adult <- df[df$age>=4&df$age<6,]
-df.old_adult <- df[df$age>=6,]
-
-# Agrupación por presión arterial
-df.normal_pressure <- df[df$trtbps<120,]
-df.high_pressure <- df[df$trtbps>=120&df$trtbps<130,]
-df.hipertension1 <- df[df$trtbps>=130&df$trtbps<140,]
-df.hipertension2 <- df[df$trtbps>=140&df$trtbps<180,]
-df.crisis_hipertension <- df[df$trtbps>=180,]
-```
-
-
-
+## 4.1. Selección de los grupos de datos que se quieren analizar/compara
 
 ## 4.2. Comprobación de la normalidad y homogeneidad de la varianza
 
