@@ -457,3 +457,20 @@ Aquí claramente también se aprecia una tendencia. A mayor edad, mayor presión
 
 
 
+\pagebreak
+
+
+Link a vídeo: [drive](www.google.com)
+
+```{r , echo=FALSE}
+Contribuciones<-c("Firma")
+Investigación_previa<-c("P.V.B & L.M.D")
+Redacción_de_las_respuestas<-c("P.V.B & L.M.D")
+Desarrollo_del_código<-c("P.V.B & L.M.D")
+Participación_en_el_vídeo<-c("P.V.B & L.M.D")
+
+
+table<-data.frame(Contribuciones,Investigación_previa,Redacción_de_las_respuestas,Desarrollo_del_código,Participación_en_el_vídeo)
+knitr::kable(t(table))
+```
+
