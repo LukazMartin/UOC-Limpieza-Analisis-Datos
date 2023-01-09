@@ -12,9 +12,10 @@ tuthor: Laia Subirats Maté
 
 \pagebreak
 
-# 1.Descripción del dataset. ¿Por qué es importante y qué pregunta/problema pretende responder?
+# 1. Descripción del dataset
 
-En primer lugar, cargaremos los datos con los que trabajar.
+**¿Por qué es importante y qué pregunta/problema pretende responder?**
+
 
 ```{r echo=FALSE}
 df <- read.csv('../data/heart.csv')
@@ -23,7 +24,7 @@ df <- read.csv('../data/heart.csv')
 Nuestro dataset está compuesto por 303 registros y 14 variables. Contiene información clínica de pacientes con el fin de poder predecir la probabilidad de fallo cardíaco. 
 
 
-Para ello, la variable a predecir, "output", contiene información acerca del estrechamiento de los vasos sanguíneos obtenida a través de una angiografía. Si el estrechamiento es inferior al 50% toma el valor 0 y por tanto el paciente no se considera en riesgo de padecer una enfermedad del corazón. Por el contrario, si el estrechamiento es superior al 50%, la variable tomará el valor 1 y el paciente tendrá una mayor probabilidad de ataque al corazón.
+Para ello, la variable a predecir, *output*, contiene información acerca del estrechamiento de los vasos sanguíneos obtenida a través de una angiografía. Si el estrechamiento es inferior al 50% toma el valor 0 y por tanto el paciente no se considera en riesgo de padecer una enfermedad del corazón. Por el contrario, si el estrechamiento es superior al 50%, la variable tomará el valor 1 y el paciente tendrá una mayor probabilidad de ataque al corazón.
 
 
 A partir de aquí, será interesante realizar un análisis del resto de campos para ver cuáles son determinantes en la predicción del fallo cardíaco. Estudiar correlaciones, así como diferencias en la probabilidad del fallo cardíaco en diferentes grupos...
@@ -31,7 +32,7 @@ A partir de aquí, será interesante realizar un análisis del resto de campos p
 
 Pero antes, vamos a realizar una breve exploración del dataset.
 
-```{r}
+```{r echo=FALSE}
 str(df)
 ```
 
@@ -43,35 +44,37 @@ summary(df)
 
 Para terminar con este apartado, vamos a explicar brevemente todos y cada uno de los campos del dataset:
 
-  · Age: Edad de los pacientes en años. Toma valores entre 29 y 77. La media es 54,37.
+  · **Age**: Edad de los pacientes en años. Toma valores entre 29 y 77. La media es 54,37.
   
-  · Sex: Sexo de los pacientes. (1 = hombre; 0 = mujer).
+  · **Sex**: Sexo de los pacientes. (1 = hombre; 0 = mujer).
   
-  · Cp: Dolor de pecho. (1 = angina típica; 2 = angina atípica; 3 = dolor no anginal; 4 = asintomático).
+  · **Cp**: Dolor de pecho. (1 = angina típica; 2 = angina atípica; 3 = dolor no anginal; 4 = asintomático).
   
-  · Trtbps: Presión arterial en reposo. Se trata del valor tomado en el ingreso al hospital, en mm Hg. Toma valores entre 94 y 200, siendo la media de 131,6.
+  · **Trtbps**: Presión arterial en reposo. Se trata del valor tomado en el ingreso al hospital, en mm Hg. Toma valores entre 94 y 200, siendo la media de 131,6.
   
-  · Chol: Colesterol sérico. Medido en mg/dl. Toma valores entre 126 y 564, con una media de 246,3.
+  · **Chol**: Colesterol sérico. Medido en mg/dl. Toma valores entre 126 y 564, con una media de 246,3.
   
-  · Fbs: Nivel de azúcar en sangre en ayunas. (1 = > 120 mg/dl; 0 = <= 120 mg/dl).
+  · **Fbs**: Nivel de azúcar en sangre en ayunas. (1 = > 120 mg/dl; 0 = <= 120 mg/dl).
   
-  · Restecg: Resultados del electrocardiograma en reposo. (0 = normal; 1 = onda ST-T anómala; 2 = hipertrofia ventricular izquierda).
+  · **Restecg**: Resultados del electrocardiograma en reposo. (0 = normal; 1 = onda ST-T anómala; 2 = hipertrofia ventricular izquierda).
   
-  · Thalachh: Máximo pulso cardíaco obtenido. Toma valores entre 71 y 202. La media es 149,6.
+  · **Thalachh**: Máximo pulso cardíaco obtenido. Toma valores entre 71 y 202. La media es 149,6.
   
-  · Exng: Angina inducida del ejercicio. (1 = sí; 0 = no).
+  · **Exng**: Angina inducida del ejercicio. (1 = sí; 0 = no).
   
-  · Oldpeak: Depresión del segmento ST inducida por ejercicio relativo al descanso. Toma valores entre 0 y 6,2, con una media de 1,04.
+  · **Oldpeak**: Depresión del segmento ST inducida por ejercicio relativo al descanso. Toma valores entre 0 y 6,2, con una media de 1,04.
   
-  · Slp: Pendiente del segmento ST del pico del ejercicio. (1 = ascendente; 2 = plano; 3 = descendente).
+  · **Slp**: Pendiente del segmento ST del pico del ejercicio. (1 = ascendente; 2 = plano; 3 = descendente).
   
-  · Caa: Número de los principales vasos sanguíneos coloreados por la fluoroscopia. Toma valores entre 0 y 4, con una media de 0,73.
+  · **Caa**: Número de los principales vasos sanguíneos coloreados por la fluoroscopia. Toma valores entre 0 y 4, con una media de 0,73.
   
-  · Thall: Talasemia. Menor nivel de hemoglobina. (1 = defecto fijo; 2 = normal; 3 = defecto reversible). El defecto fijo hace referencia a un defecto que ocurre tanto en reposo como durante el esfuerzo. El defecto reversible, por el contrario, hace referencia a un defecto que ocurre durante el esfuerzo que no existía durante el reposo.
+  · **Thall**: Talasemia. Menor nivel de hemoglobina. (1 = defecto fijo; 2 = normal; 3 = defecto reversible). El defecto fijo hace referencia a un defecto que ocurre tanto en reposo como durante el esfuerzo. El defecto reversible, por el contrario, hace referencia a un defecto que ocurre durante el esfuerzo que no existía durante el reposo.
 
-  · Output: La variable a predecir. Diagnóstico de fallo cardíaco (0 = Estrechamiento de vasos sanguíneos < 50%; 1 = Estrechamiento de vasos sanguíneos > 50%).
+  · **Output**: La variable a predecir. Diagnóstico de fallo cardíaco (0 = Estrechamiento de vasos sanguíneos < 50%; 1 = Estrechamiento de vasos sanguíneos > 50%).
 
-# 2.Integración y selección 
+\pagebreak
+
+# 2. Integración y selección 
 
 En este apartado analizaremos qué campos son realmente significativos a la hora de predecir la variable output.
 
@@ -85,47 +88,14 @@ cor_pearson <- cor(df)
 cor_pearson[14,]
 ```
 
-Las variables chol (colesterol sérico) y fbs (nivel de azúcar en sangre en ayunas) presentan un coeficiente por debajo del 0.1 (en valor absoluto), por lo que podemos concluir que la correlación con la variable a predecir es prácticamente inexistente, y podemos prescindir de estas variables de cara al análisis.
+Las variables *chol* (colesterol sérico) y *fbs* (nivel de azúcar en sangre en ayunas) presentan un coeficiente por debajo del 0.1 (en valor absoluto), por lo que podemos concluir que la correlación **directa** con la variable a predecir es muy baja. Otras variables como *cp* presentan una correlación directa alta. 
 
+En el dataset en concreto, todas las variables parecen de valor. Si por ejemplo nos interesase estudiar solo hombres, ya que son más propensos a un paro cardíaco, podríamos quitar del dataset las mujeres y borrar la columna *sex*. O si nos interesas analizar solo personas menores de 60 años, ya que por encima las personas tienen un sistema inmunológico más débil, también podríamos quitarlas del dataset.
 
-Para acabar con este apartado, haremos un análisis de componentes principales, para detectar cuáles son las variables que realmente describen el conjunto de datos.
-
-Pero antes, descargaremos las librerías necesarias,
-
-```{r echo=TRUE, message=FALSE, warning=FALSE}
-#if (!require('FactoMineR')) install.packages('FactoMineR'); library('FactoMineR')
-#if (!require('factoextra')) install.packages("factoextra"); library('factoextra')
-```
-
-A continuación, realizamos el test de PCA,
+Creamos una copia del dataset, por si posteriormente queremos realizar transformaciones sobre los datos
 
 ```{r}
-#PCA <- PCA(df, graph=FALSE)
-
-# Contribuciones de las variables a PC1,
-#fviz_contrib(PCA, choice = "var", axes = 1, top = 14)
-# Contribuciones de las variables a PC2,
-#fviz_contrib(PCA, choice = "var", axes = 2, top = 14)
-```
-
-En estos gráficos podemos ver el nivel de contribución de cada una de las variables a las 2 primeras dimensiones de las componentes principales. Seleccionamos las dos primeras dimensiones ya que las variables que estén correlacionadas con éstas serán las que sean capaces de explicar todo el dataset.
-
-
-Las variables output, oldpeak, thalachh, exng, slp y cp contribuyen más que la media de contribución esperada (línea roja) para la dimensión 1. Sin embargo, caa, age y thall también contribuyen de forma no despreciable. Las variables trtbps, sex, restecg, chol y fbs son las que menos contribuyen a la dimensión 1.
-
-
-Si vamos a la dimensión 2, tenemos que age, trtbps, sex, chol, fbs y cp contribuyen más que la media de contribución esperada.
-
-Viendo la perspectiva para las dos primeras dimensiones, vemos que la variable restecg (Resultado de electrocardiograma en reposo) es la que menos contribuye. Además, volviendo al coeficiente de correlación de Pearson, después de chol y fbs, también es la que menor coeficiente, en valor absoluto, presenta.
-
-
-En conclusión, prescindiremos de las variables chol y fbs por presentar una correlación prácticamente inexistente con la variable a predecir, output. Por otro lado, también prescindimos del campo restecg ya que es el que menos contribuye a la variabilidad del dataset, además de presentar una correlación débil con la variable a predecir.
-
-
-```{r}
-col <- c(1,2,3,4,8,9,10,11,12,13,14)
-
-df_def <- df[,col]
+df_def <- df
 ```
 
 
@@ -238,18 +208,21 @@ Hay 3 grupos en especial que nos interesa estudiar en función del fallo cardía
 
 ```{r}
 # Agrupación por género
-df.male <- df[df$sex == 1,]
-df.female <- df[df$sex == 0,]
+df.male <- df_def[df_def$sex == 1,]
+df.female <- df_def[df_def$sex == 0,]
+
 # Agrupación por edad
-df.young_adult <- df[df$age<4,]
-df.adult <- df[df$age>=4&df$age<6,]
-df.old_adult <- df[df$age>=6,]
+df.young_adult <- df_def[df_def$age<40,]
+df.adult <- df_def[df_def$age>=40&df_def$age<60,]
+df.old_adult <- df_def[df_def$age>=60,]
+
 # Agrupación por presión arterial
-df.normal_pressure <- df[df$trtbps<120,]
-df.high_pressure <- df[df$trtbps>=120&df$trtbps<130,]
-df.hipertension1 <- df[df$trtbps>=130&df$trtbps<140,]
-df.hipertension2 <- df[df$trtbps>=140&df$trtbps<180,]
-df.crisis_hipertension <- df[df$trtbps>=180,]
+df.normal_pressure <- df_def[df_def$trtbps<120,]
+df.high_pressure <- df_def[df_def$trtbps>=120&df_def$trtbps<130,]
+df.hipertension1 <- df_def[df_def$trtbps>=130&df_def$trtbps<140,]
+df.hipertension2 <- df_def[df_def$trtbps>=140&df_def$trtbps<180,]
+df.crisis_hipertension <- df_def[df_def$trtbps>=180,]
+
 # Agrupación por fallo cardíaco
 df.high_output <- df_def[df_def$output == 1,]
 df.low_output <-df_def[df_def$output == 0,]
@@ -264,16 +237,16 @@ df.low_output <-df_def[df_def$output == 0,]
 Estudiamos la normalidad de la variable age y trtbps según la variable output, para ello, graficamos los QQplots que nos permiten observar similitudes con una distribución normal,
 
 
-```{r}
-qqnorm(df.high_output$age)
+```{r echo=FALSE, fig.height=4}
+qqnorm(df.high_output$age,  xlab='Pacientes con fallo cardíaco', ylab='Edad')
 qqline(df.high_output$age,col=2)
-qqnorm(df.low_output$age)
+qqnorm(df.low_output$age,  xlab='Pacientes sin fallo cardíaco', ylab='Edad')
 qqline(df.low_output$age,col=2)
 ```
 
 Visualmente, la variable age parece comportarse como una normal a partir de los gráficos, no obstante, realizaremos el test Shapiro para asegurarnos de que esto es cierto,
 
-```{r}
+```{r echo=FALSE}
 shapiro.test(df.high_output$age)
 shapiro.test(df.low_output$age)
 ```
@@ -283,7 +256,7 @@ A partir del test de Shapiro-Wilk, podemos asumir que la variable edad para los 
 Como no podemos asumir normalidad para el conjunto de pacientes con output = 0, comprobamos igualdad de varianzas a partir del test fligner:
 
 
-```{r}
+```{r echo=FALSE}
 fligner.test(age ~ output, data = df_def)
 ```
 
@@ -291,16 +264,16 @@ De nuevo, tenemos un p-valor menor a 0.05, por lo que rechazamos la hipótesis n
 
 Volvemos a hacer el mismo ejercicio, pero ahora para la variable trtbps,
 
-```{r}
-qqnorm(df.high_output$trtbps)
+```{r echo=FALSE}
+qqnorm(df.high_output$trtbps,  xlab='Pacientes con fallo cardíaco', ylab='Presión arterial')
 qqline(df.high_output$trtbps,col=2)
-qqnorm(df.low_output$trtbps)
+qqnorm(df.low_output$trtbps,  xlab='Pacientes sin fallo cardíaco', ylab='Presión arterial')
 qqline(df.low_output$trtbps,col=2)
 ```
 
 De nuevo, tenemos que la variable trtbps parece comportarse como una normal a partir de los gráficos, no obstante, realizaremos el test Shapiro para asegurarnos de que esto es cierto,
 
-```{r}
+```{r echo=FALSE}
 shapiro.test(df.high_output$trtbps)
 shapiro.test(df.low_output$trtbps)
 ```
@@ -309,7 +282,7 @@ A partir del test de Shapiro-Wilk, tenemos que la variable trtbps no presenta un
 
 Como no podemos asumir normalidad, comprobamos igualdad de varianzas a partir del test fligner:
 
-```{r}
+```{r echo=FALSE}
 fligner.test(trtbps ~ output, data = df_def)
 ```
 
@@ -322,16 +295,14 @@ El primer test a realizar será un contraste sobre la proporción de una muestra
 
 Para ello, en primer lugar realizaremos un gráfico para ver visualmente cómo está distribuida nuestra muestra,
 
-Pero antes, descargamos ciertas librerías necesarias,
-
-```{r echo=TRUE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 if (!require('ggplot2')) install.packages('ggplot2'); library('ggplot2')
 if (!require('gridExtra')) install.packages("gridExtra"); library('gridExtra')
 if (!require('scales')) install.packages('scales'); library('scales')
 ```
 
 
-```{r}
+```{r  echo=FALSE}
 ggplot(df_def, aes(x = output, group = sex))+geom_bar(aes(y = ..prop.., fill = factor(..x..)))+geom_text(aes( label = percent(..prop.., accuracy=0.1), y= ..prop.. ), stat= "count", vjust = -.25) + labs(y = "Porcentaje", fill="Output") +facet_grid(~sex) + scale_y_continuous(labels = percent) +ggtitle("Porcentaje de pacientes según output en función del género")
 ```
 
@@ -353,7 +324,7 @@ Entre los hombres (207), (93) tienen una probabilidad alta de fallo cardíaco.
 
 Aplicamos el test,
 
-```{r}
+```{r echo=FALSE}
 prop.test(x = c(72,93), n = c(96,207), alternative="greater", correct = FALSE)
 ```
 
@@ -365,7 +336,7 @@ A continuación, vamos a realizar dos tests de dos muestras independientes (seg�
 
 En el apartado anterior ya vimos que no podíamos asumir normalidad en ninguno de los casos, por lo que aplicamos un test no paramétrico como el de Wilcoxon,
 
-```{r}
+```{r echo=FALSE}
 wilcox.test(df_def$age~df_def$output)
 wilcox.test(df_def$trtbps~df_def$output)
 ```
@@ -394,29 +365,95 @@ summary(Modlg)
 
 A continuación, generaremos la matriz de confusión para ver qué tal predice nuestro modelo, para ello haremos uso del conjunto de test.
 
-```{r echo=TRUE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 if (!require('caret')) install.packages('caret'); library('caret')
 ```
 
 ```{r}
-prediction1 <- data.frame(predict(Modlg, df.test[,1:10], type = "response"))
+prediction1 <- data.frame(predict(Modlg, df.test[,1:13], type = "response"))
 prediction2 <- data.frame(ifelse(prediction1 < 0.5, 0, 1))
 
-confusionMatrix(data=as.factor(prediction2$predict.Modlg..df.test...1.10...type....response..), reference=as.factor(df.test$output))
+confusionMatrix(data=as.factor(prediction2$predict.Modlg..df.test...1.13...type....response..), reference=as.factor(df.test$output))
 ```
 
 Nuestro modelo tiene un porcentaje de acierto del 73,47%. Si hablamos de predecir a los pacientes con mayor probabilidad de infarto (output = 1), esta probabilidad sube hasta el 80,77%.
 
-
+\pagebreak
 # 5. Representación de los resultados a partir de tablas y gráficas
+
+Primero, presentamos una tabla de la variable *sex* en función de *age* y el porcentaje de paros cardíacos.
+
+```{r , echo=FALSE}
+sex<-c("","female","male")
+adult_under_40<-c("",paste(round((sum(df.female$age<40&df.female$output==1)/sum(df.female$age<40))*100,2),"%"),
+                  paste(round((sum(df.male$age<40&df.male$output==1)/sum(df.male$age<40))*100,2),"%"))
+
+adult_40_to_50<-c("",paste(round((sum(df.female$age>=40&df.female$age<50&df.female$output==1)/
+                        sum(df.female$age>=40&df.female$age<50))*100,2),"%"),
+                  paste(round((sum(df.male$age>=40&df.male$age<50&df.male$output==1)/sum(df.male$age>=40&df.male$age<50))*100,2),"%"))
+
+adult_50_to_60<-c("",paste(round((sum(df.female$age>=50&df.female$age<60&df.female$output==1)/
+                        sum(df.female$age>=50&df.female$age<60))*100,2),"%"),
+                  paste(round((sum(df.male$age>=50&df.male$age<60&df.male$output==1)/sum(df.male$age>=50&df.male$age<60))*100,2),"%"))
+
+adult_60_to_70<-c("",paste(round((sum(df.female$age>=60&df.female$age<70&df.female$output==1)/
+                        sum(df.female$age>=60&df.female$age<70))*100,2),"%"),
+                  paste(round((sum(df.male$age>=60&df.male$age<70&df.male$output==1)/sum(df.male$age>=60&df.male$age<70))*100,2),"%"))
+
+adult_over_70<-c("",paste(round((sum(df.female$age>=70&df.female$output==1)/
+                        sum(df.female$age>=70))*100,2),"%"),
+                  paste(round((sum(df.male$age>=70&df.male$output==1)/sum(df.male$age>=70))*100,2),"%"))
+
+table<-data.frame(sex,adult_under_40,adult_40_to_50, adult_50_to_60, adult_60_to_70,adult_over_70)
+knitr::kable(t(table))
+```
+
+Si miramos la fila *adult_40_to_50* de la tabla, vemos que la columna **female** tiene 94.74%. Indicando que de todas las mujeres de entre 40 y 50 del dataset, un 94.74% han tenido un paro cardíaco.
+
+Concluimos pues que el porcentaje de mujeres con fallo cardíaco en función de mujeres totales tiene un ratio significativamente superior al de los hombres
+
+
+También, vamos a hacer un lineplot de la variable *trtbps* en función de *sex*.
+
+```{r, echo=FALSE, fig.width=10}
+plot(c(1,2,3,4,5,1,2,3,4,5),c(sum(df.normal_pressure$sex==1),sum(df.high_pressure$sex==1),sum(df.hipertension1$sex==1),
+                  sum(df.hipertension2$sex==1),sum(df.crisis_hipertension$sex==1),sum(df.normal_pressure$sex==0),sum(df.high_pressure$sex==0),sum(df.hipertension1$sex==0),
+                  sum(df.hipertension2$sex==0),sum(df.crisis_hipertension$sex==0)),xaxt="n",ylab="Amount (people)",xlab="Blood Pressure",lwd=2)
+lines(c(1,2,3,4,5),c(sum(df.normal_pressure$sex==1),sum(df.high_pressure$sex==1),sum(df.hipertension1$sex==1),
+                  sum(df.hipertension2$sex==1),sum(df.crisis_hipertension$sex==1)),col="red",lwd=2)
+xtick<-c("Normal","High Pressure","Hipertension1","Hipertension2","Crisis Hipertension")
+axis(1, at=1:5, labels=xtick)
+lines(c(1,2,3,4,5),c(sum(df.normal_pressure$sex==0),sum(df.high_pressure$sex==0),sum(df.hipertension1$sex==0),
+                  sum(df.hipertension2$sex==0),sum(df.crisis_hipertension$sex==0)),col="blue",lwd=2)
+legend(4.5, 50, legend=c("MALE", "FEMALE"),
+       col=c("red", "blue"), lty=1:2, cex=0.8,bg='lightblue',text.font=4)
+```
+
+Podemos observar que la cantidad de hombres con niveles de hipertensión 2 y presión alta son superiores a los demás niveles. Para las mujeres parece ser más constante.
+
+
+Finalmente, un lineplot de la variable *age* en función de la media de *trtbps*.
+
+```{r, echo=FALSE, fig.width=10}
+plot(c(1,2,3,1,2,3),c(mean(df.young_adult[df.young_adult$sex==1,]$trtbps),mean(df.adult[df.adult$sex==1,]$trtbps),
+                mean(df.old_adult[df.old_adult$sex==1,]$trtbps),
+                mean(df.young_adult[df.young_adult$sex==0]$trtbps),mean(df.adult[df.adult$sex==0,]$trtbps),
+                mean(df.old_adult[df.old_adult$sex==0,]$trtbps)),
+     xaxt="n",ylab="Blood pressure (mean mmHg)",xlab="Blood Pressure in different group ages",lwd=2)
+lines(c(1,2,3),c(mean(df.young_adult[df.young_adult$sex==1,]$trtbps),mean(df.adult[df.adult$sex==1,]$trtbps),
+                mean(df.old_adult[df.old_adult$sex==1,]$trtbps)),col="red",lwd=2)
+lines(c(1,2,3),c( mean(df.young_adult[df.young_adult$sex==0]$trtbps),mean(df.adult[df.adult$sex==0,]$trtbps),
+                mean(df.old_adult[df.old_adult$sex==0,]$trtbps)),col="blue",lwd=2)
+xtick<-c("Young Adult (<40)","Adult (40-60)","Older Adult (>60)")
+axis(1, at=1:3, labels=xtick)
+legend(1.2,136, legend=c("MALE", "FEMALE"),
+       col=c("red", "blue"), lty=1:2, cex=0.8,bg='lightblue',text.font=4)
+```
+
+Aquí claramente también se aprecia una tendencia. A mayor edad, mayor presión arterial (tanto para hombre como para mujeres)
+\pagebreak
 
 # 6. Resolución del problema
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars, echo=FALSE}
-summary(cars)
-```
 
