@@ -1,7 +1,7 @@
 ---
 title: 'PRÁCTICA 2: ¿Cómo realizar la limpieza y análisis de datos?'
 author: "Lukaz Martin Doehne y Pablo Vadillo Berganza"
-date: "07/01/2023"
+date: "08/01/2023"
 output:
   pdf_document:
     toc: true
@@ -26,7 +26,7 @@ Nuestro dataset está compuesto por 303 registros y 14 variables. Contiene infor
 Para ello, la variable a predecir, "output", contiene información acerca del estrechamiento de los vasos sanguíneos obtenida a través de una angiografía. Si el estrechamiento es inferior al 50% toma el valor 0 y por tanto el paciente no se considera en riesgo de padecer una enfermedad del corazón. Por el contrario, si el estrechamiento es superior al 50%, la variable tomará el valor 1 y el paciente tendrá una mayor probabilidad de ataque al corazón.
 
 
-A partir de aquí, será interesante realizar un análisis del resto de campos para ver cuáles son determinantes en la predicción del fallo cardíaco.
+A partir de aquí, será interesante realizar un análisis del resto de campos para ver cuáles son determinantes en la predicción del fallo cardíaco. Estudiar correlaciones, así como diferencias en la probabilidad del fallo cardíaco en diferentes grupos...
 
 
 Pero antes, vamos a realizar una breve exploración del dataset.
@@ -233,6 +233,8 @@ Hay 3 grupos en especial que nos interesa estudiar en función del fallo cardía
 
 · La variable **trtbps**. En función de la presión arterial de los pacientes. Información extraída de: [mayoclinic.org](https://www.mayoclinic.org/es-es/diseases-conditions/high-blood-pressure/diagnosis-treatment/drc-20373417#:~:text=Presi%C3%B3n%20arterial%20normal,de%20emergencia%20local.)
 
+· La variable **output**. En función de la probabilidad de fallo cardíaco.
+
 
 ```{r}
 # Agrupación por género
@@ -248,6 +250,9 @@ df.high_pressure <- df[df$trtbps>=120&df$trtbps<130,]
 df.hipertension1 <- df[df$trtbps>=130&df$trtbps<140,]
 df.hipertension2 <- df[df$trtbps>=140&df$trtbps<180,]
 df.crisis_hipertension <- df[df$trtbps>=180,]
+# Agrupación por fallo cardíaco
+df.high_output <- df_def[df_def$output == 1,]
+df.low_output <-df_def[df_def$output == 0,]
 ```
 
 
@@ -255,7 +260,153 @@ df.crisis_hipertension <- df[df$trtbps>=180,]
 
 ## 4.2. Comprobación de la normalidad y homogeneidad de la varianza
 
+
+Estudiamos la normalidad de la variable age y trtbps según la variable output, para ello, graficamos los QQplots que nos permiten observar similitudes con una distribución normal,
+
+
+```{r}
+qqnorm(df.high_output$age)
+qqline(df.high_output$age,col=2)
+qqnorm(df.low_output$age)
+qqline(df.low_output$age,col=2)
+```
+
+Visualmente, la variable age parece comportarse como una normal a partir de los gráficos, no obstante, realizaremos el test Shapiro para asegurarnos de que esto es cierto,
+
+```{r}
+shapiro.test(df.high_output$age)
+shapiro.test(df.low_output$age)
+```
+
+A partir del test de Shapiro-Wilk, podemos asumir que la variable edad para los pacientes con output = 1 sigue una distribución normal, ya que el p-valor es mayor que 0.05 (nivel de significancia normalmente utilizado), si bien para los pacientes con output = 0 esto no es cierto ya que el p-valor es menor.
+
+Como no podemos asumir normalidad para el conjunto de pacientes con output = 0, comprobamos igualdad de varianzas a partir del test fligner:
+
+
+```{r}
+fligner.test(age ~ output, data = df_def)
+```
+
+De nuevo, tenemos un p-valor menor a 0.05, por lo que rechazamos la hipótesis nula de que las varianzas son iguales para ambos conjuntos.
+
+Volvemos a hacer el mismo ejercicio, pero ahora para la variable trtbps,
+
+```{r}
+qqnorm(df.high_output$trtbps)
+qqline(df.high_output$trtbps,col=2)
+qqnorm(df.low_output$trtbps)
+qqline(df.low_output$trtbps,col=2)
+```
+
+De nuevo, tenemos que la variable trtbps parece comportarse como una normal a partir de los gráficos, no obstante, realizaremos el test Shapiro para asegurarnos de que esto es cierto,
+
+```{r}
+shapiro.test(df.high_output$trtbps)
+shapiro.test(df.low_output$trtbps)
+```
+
+A partir del test de Shapiro-Wilk, tenemos que la variable trtbps no presenta una distribución normal en ninguno de los conjuntos, siendo sobre todo evidente en los pacientes con output = 0.
+
+Como no podemos asumir normalidad, comprobamos igualdad de varianzas a partir del test fligner:
+
+```{r}
+fligner.test(trtbps ~ output, data = df_def)
+```
+
+Obtenemos un p-valor de 0.243, por tanto no estamos en condiciones de rechazar la hipótesis nula y concluimos que las varianzas son similares para pacientes con output 1 y 0.
+
+
 ## 4.3. Aplicación de pruebas estadísticas para comparar los grupos de datos
+
+El primer test a realizar será un contraste sobre la proporción de una muestra. Queremos ver si hay diferencias en la proporción de pacientes con output = 1 entre hombres y mujeres.
+
+Para ello, en primer lugar realizaremos un gráfico para ver visualmente cómo está distribuida nuestra muestra,
+
+Pero antes, descargamos ciertas librerías necesarias,
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+if (!require('ggplot2')) install.packages('ggplot2'); library('ggplot2')
+if (!require('gridExtra')) install.packages("gridExtra"); library('gridExtra')
+if (!require('scales')) install.packages('scales'); library('scales')
+```
+
+
+```{r}
+ggplot(df_def, aes(x = output, group = sex))+geom_bar(aes(y = ..prop.., fill = factor(..x..)))+geom_text(aes( label = percent(..prop.., accuracy=0.1), y= ..prop.. ), stat= "count", vjust = -.25) + labs(y = "Porcentaje", fill="Output") +facet_grid(~sex) + scale_y_continuous(labels = percent) +ggtitle("Porcentaje de pacientes según output en función del género")
+```
+
+Según lo visualizado, entre las mujeres, el 75% presenta un output 1, mientras que entre los hombres sólo un 44,9%. Esto parece indicar que las mujeres presentan una mayor probabilidad de fallo cardíaco.
+
+
+Por tanto, nuestra hipótesis nula será la igualdad de proporción de pacientes con output 1 entre hombres y mujeres, y la hipótesis alternativa que la proporción de pacientes con output 1 es mayor en mujeres que en hombres.
+
+Aplicamos un contraste sobre la diferencia de proporciones, asumiendo la aproximación de la distribución binomial a una normal para muestras grandes. Se trata de un contraste unilateral por la derecha.
+
+```{r}
+summary(factor(df.male$output))
+summary(factor(df.female$output))
+```
+
+Dentro de las mujeres (96), (72) tienen una probabilidad alta de fallo cardíaco.
+
+Entre los hombres (207), (93) tienen una probabilidad alta de fallo cardíaco.
+
+Aplicamos el test,
+
+```{r}
+prop.test(x = c(72,93), n = c(96,207), alternative="greater", correct = FALSE)
+```
+
+El p-valor es muy pequeño, por lo que rechazamos la hipótesis nula de igualdad de proporciones, y aceptamos la hipótesis de que las mujeres tienen un mayor probabilidad de fallo cardíaco.
+
+
+A continuación, vamos a realizar dos tests de dos muestras independientes (según output) para descubrir si hay diferencias entre las variables age y trtbps.
+
+
+En el apartado anterior ya vimos que no podíamos asumir normalidad en ninguno de los casos, por lo que aplicamos un test no paramétrico como el de Wilcoxon,
+
+```{r}
+wilcox.test(df_def$age~df_def$output)
+wilcox.test(df_def$trtbps~df_def$output)
+```
+
+En ambos casos tenemos que el p-valor es menor a 0.05, por lo que rechazamos la hipótesis nula y asumimos que existen diferencias significativas en la edad y en la presión arterial de los pacientes según su probabilidad de fallo cardíaco.
+
+Finalmente, podemos generar un modelo de regresión logística para predecir el valor de la variable output.
+
+
+Para ello, dividimos el dataset en un conjunto de entrenamiento y otro de test:
+
+```{r}
+set.seed(1)
+
+sample <- sample(c(TRUE, FALSE), nrow(df_def), replace=TRUE, prob=c(0.8,0.2))
+df.train  <- df_def[sample, ]
+df.test   <- df_def[!sample, ]
+```
+
+Y creamos el modelo a partir del conjunto de entrenamiento,
+
+```{r}
+Modlg <- glm(output ~ age + sex + cp + trtbps + thalachh + exng + oldpeak + slp + caa + thall, data = df.train, family = binomial)
+summary(Modlg)
+```
+
+A continuación, generaremos la matriz de confusión para ver qué tal predice nuestro modelo, para ello haremos uso del conjunto de test.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+if (!require('caret')) install.packages('caret'); library('caret')
+```
+
+```{r}
+prediction1 <- data.frame(predict(Modlg, df.test[,1:10], type = "response"))
+prediction2 <- data.frame(ifelse(prediction1 < 0.5, 0, 1))
+
+confusionMatrix(data=as.factor(prediction2$predict.Modlg..df.test...1.10...type....response..), reference=as.factor(df.test$output))
+```
+
+Nuestro modelo tiene un porcentaje de acierto del 73,47%. Si hablamos de predecir a los pacientes con mayor probabilidad de infarto (output = 1), esta probabilidad sube hasta el 80,77%.
+
 
 # 5. Representación de los resultados a partir de tablas y gráficas
 
