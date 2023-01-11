@@ -457,13 +457,18 @@ Aquí claramente también se aprecia una tendencia. A mayor edad, mayor presión
 
 **A partir de los resultados obtenidos, ¿Cuáles son las conclusiones? ¿Los resultados permiten responder al problema?**
 
+
 A partir de los resultados obtenidos en el análisis, podemos extraer principalmente tres conclusiones:
+
 
 · Las mujeres de nuestra muestra presentan un mayor estrechamiento de los vasos sanguíneos (output=1) y al extrapolar esto a la población total concluimos que las mujeres tienen una mayor probabilidad de fallo cardíaco.
 
+
 · Al dividir los pacientes según su estrechamiento de los vasos sanguíneos y por tanto probabilidad de fallo cardíaco (variable output), encontramos diferencias significativas en la edad y presión arterial.
 
+
 · Al crear un modelo de regresión logística que intente explicar el dataset en cuestión, tenemos que la precisión de éste es del 73,47%, y concretamente, esta precisión aumenta hasta el 80,77% a la hora de predecir pacientes con mayor probabilidad de fallo cardíaco (output=1).
+
 
 Por tanto, podemos afirmar que los resultados efectivamente dan respuesta a las preguntas planteadas. No sólo a través de la creación de un modelo logístico para la predicción de la probabilidad de fallo cardíaco, si no que también en el análisis exploratorio de encontrar correlaciones y diferencias entre diferentes poblaciones en los pacientes.
 
