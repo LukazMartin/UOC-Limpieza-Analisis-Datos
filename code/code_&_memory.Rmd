@@ -472,10 +472,7 @@ A partir de los resultados obtenidos en el análisis, podemos extraer principalm
 
 Por tanto, podemos afirmar que los resultados efectivamente dan respuesta a las preguntas planteadas. No sólo a través de la creación de un modelo logístico para la predicción de la probabilidad de fallo cardíaco, si no que también en el análisis exploratorio de encontrar correlaciones y diferencias entre diferentes poblaciones en los pacientes.
 
-
-
-\pagebreak
-
+# Contribuciones
 
 Link a vídeo: [drive](www.google.com)
 
