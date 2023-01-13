@@ -474,7 +474,7 @@ Por tanto, podemos afirmar que los resultados efectivamente dan respuesta a las 
 
 # Contribuciones
 
-Link a vídeo: [drive](www.google.com)
+Link a vídeo: [https://drive.google.com/file/d/1h4w2uNggXRxsNQIdYCcQIfZCaypuleem/view?usp=sharing](https://drive.google.com/file/d/1h4w2uNggXRxsNQIdYCcQIfZCaypuleem/view?usp=sharing)
 
 ```{r , echo=FALSE}
 Contribuciones<-c("Firma")
